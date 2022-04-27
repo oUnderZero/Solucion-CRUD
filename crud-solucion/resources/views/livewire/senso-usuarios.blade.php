@@ -1,6 +1,6 @@
 <x-slot name="header">
 
-    <div class=" justify-center w-full flex ">
+    <div class=" justify-center w-full flex mb-14">
         
         <div class="max-w-max absolute  ">
             <h1 class="text-white p-3 rounded-2xl bg-gray-800  "> Senso Usuarios </h1>
@@ -15,14 +15,20 @@
 <div class="items-center justify-center min-h-screen ">
     <div class="max-w-max mx-auto sm:px6 lg:px-8 ">
         <div class=" text-gray-400 overflow-hidden    ">
-            <button  wire:click="crear()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-4 mt-3 rounded-lg" > Crear </button>
-            @if($modal)
+           @if ($tipo_usuario != null)
+           <button  wire:click="crear()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-4 mt-3 rounded-lg" > Crear </button>
+           @else
+           <div class="pt-9">
+
+           </div>
+           @endif
+             @if($modal)
                 @include('livewire.crear')
             @endif
             <table class="table mt-2 max-w-7xl  border-separate  text-sm ">
                 <thead class="bg-gray-800 text-white">
-                    <tr   >
-                            <th class="border-r-2  border-gray-700   px-4 py-2 ">Id</th>
+                    <tr >  
+                            <th class="border-r-2  border-gray-700   px-4 py-2 ">Id </th>
                             <th class="border-r-2 border-gray-700  px-4 py-2">Dni</th>
                             <th class="border-r-2 border-gray-700  px-4 py-2">Nombre</th>
                             <th class="border-r-2 border-gray-700  px-4 py-2">Apellido Paterno</th>
@@ -30,13 +36,19 @@
                             <th class="border-r-2 border-gray-700  px-4 py-2">Fecha de Nacimiento</th>
                             <th class="border-r-2 border-gray-700  px-4 py-2">Direccion</th>
                             <th class="border-r-2 border-gray-700  px-4 py-2">Telefono</th>
+                            @if ($tipo_usuario != null)
                             <th class=" border-gray-700  px-4 py-2">Acciones</th>
+                            @endif
+                            
                     </tr>
                 </thead>
                 <tbody class="bg-gray-800">
-                    @foreach ($senso_usuarios as $senso_usuarios)
-                        <tr>
-                            <td class=" px-4  py-2 text-center">{{ $senso_usuarios->id }}</td>
+                    
+                    @foreach ($senso  as $senso_usuarios)
+                   
+                   
+                        <tr> 
+                            <td class=" px-4  py-2 text-center"> {{$numero}}</td>
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->DNI }}</td>
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->NOMBRE }}</td>
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->APELLIDO_PATERNO }}</td>
@@ -44,22 +56,36 @@
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->FECHA_NACIMIENTO }}</td>
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->DIRECCION }}</td>
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->TELEFONO }}</td>
-                         
+                         @if ($tipo_usuario != null)
                             <td class="p-3">
+                                
                                 <a wire:click="ver({{$senso_usuarios->id }})" class="text-blue-500 hover:text-blue-200 mr-2 ">
                                     <i class="material-icons-outlined text-base " >visibility</i>
                                 </a>
                                 <a wire:click="editar({{$senso_usuarios->id }})"  class="text-green-500 hover:text-green-200 mx-2">
                                     <i class="material-icons-outlined text-base">edit</i>
                                 </a>
+                                
+                               
+                                @if ($tipo_usuario ==1)
                                 <a wire:click="eliminar({{$senso_usuarios->id }})" onclick="return confirm('Are you sure?')" class="text-red-500 hover:text-red-200 ml-2">
                                     <i class="material-icons-round text-base">delete_outline</i>
                                 </a>
+                                @endif  
+                                
                             </td>
+                            @endif
                         </tr>
+                        @php
+                            $numero+=1
+                        @endphp
                     @endforeach
+                   
                 </tbody>
             </table>
+            <div class="pagination justify-content-end">
+                {{$senso->links()}}
+              </div>  
             @if(session()->has('verde'))
             <div class="container" id="alertbox">
                 <div class="container bg-green-500 flex items-center text-white text-sm font-bold px-4 py-3 relative"

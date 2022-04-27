@@ -4,11 +4,12 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Senso;
-
+use DB;
 class SensoUsuarios extends Component
 {
     public $senso_usuarios,$id_persona, $dni, $nombre, $apellido_paterno, $apellido_materno, $dir, $tfno, $fecnac;
-    public $modal = false, $bloqueo = false;
+    public $modal = false, $bloqueo = false, $tipo_usuario;
+    public $numero = 0;
     protected $rules = [
         
         'tfno' => 'required|digits:10',
@@ -21,10 +22,17 @@ class SensoUsuarios extends Component
 
     ];
     public function render()
-    {
-        $this->senso_usuarios = Senso::all();
-        //dd() para debugear las eloquent queries uwu
-        return view('livewire.senso-usuarios');
+    {     
+        
+        $senso_usuarios = DB::table('senso_usuarios')->paginate(3); 
+        $this->numero = $senso_usuarios->firstItem();
+        $this->tipo_usuario = Auth()->user()->id_tipo_usuario;
+       // $this->links = $this->senso_usuarios -> links();
+        
+       // dd(Senso::paginate(1));
+        //dd(Senso::paginate(3)); //para debugear las eloquent queries uwu
+     
+        return view('livewire.senso-usuarios', ['senso' => $senso_usuarios]);
     }
 
     public function crear(){ //aqui creamos los usuarios 

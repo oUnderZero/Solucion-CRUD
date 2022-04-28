@@ -21,7 +21,5 @@ Route::middleware([
 ])->group(function () {
     Route::get('/', SensoUsuarios::class);
     Route::get('/senso', SensoUsuarios::class)->name('senso');
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+   
 });

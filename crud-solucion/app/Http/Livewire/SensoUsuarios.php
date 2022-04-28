@@ -7,10 +7,10 @@ use App\Models\Senso;
 use DB;
 class SensoUsuarios extends Component
 {
-    public $senso_usuarios,$id_persona, $dni, $nombre, $apellido_paterno, $apellido_materno, $dir, $tfno, $fecnac;
+    public $senso_usuarios,$id_persona, $dni, $nombre, $apellido_paterno, $apellido_materno, $dir, $tfno, $fecnac; 
     public $modal = false, $bloqueo = false, $tipo_usuario;
     public $numero = 0;
-    protected $rules = [
+    protected $rules = [ //estas reglas se aplican al formulario de creacion de usuarios
         
         'tfno' => 'required|digits:10',
         'fecnac' => 'required|date',
@@ -21,21 +21,17 @@ class SensoUsuarios extends Component
         'dir' => 'required|string',
 
     ];
-    public function render()
+    public function render() //este metodo se ejecuta cuando se carga la pagina.
     {     
         
-        $senso_usuarios = DB::table('senso_usuarios')->paginate(3); 
+        $senso_usuarios = DB::table('senso_usuarios')->paginate(5); //seleccionamos todos los usuarios de la tabla senso_usuarios y los paginamos 
         $this->numero = $senso_usuarios->firstItem();
         $this->tipo_usuario = Auth()->user()->id_tipo_usuario;
-       // $this->links = $this->senso_usuarios -> links();
-        
-       // dd(Senso::paginate(1));
-        //dd(Senso::paginate(3)); //para debugear las eloquent queries uwu
-     
-        return view('livewire.senso-usuarios', ['senso' => $senso_usuarios]);
+       
+        return view('livewire.senso-usuarios', ['senso' => $senso_usuarios]); //retornamos la vista senso-usuarios con los usuarios
     }
 
-    public function crear(){ //aqui creamos los usuarios 
+    public function crear(){ //este metodo se ejecuta cuando se hace click en el boton crear, que es cuando se abre el modal
         $this->limpiar();
         $this -> bloqueo = false;
         $this->abrirModal();
@@ -51,7 +47,7 @@ class SensoUsuarios extends Component
         $this->modal = false;
     }
 
-    public function limpiar(){
+    public function limpiar(){ 
         $this -> dni = "";
         $this -> id_persona = "";
         $this -> nombre = "";
@@ -63,7 +59,7 @@ class SensoUsuarios extends Component
         
 
     }
-    public function ver($id){
+    public function ver($id){ //este metodo se ejecuta cuando se hace click en el boton ver, que es cuando se abre el modal y se visualiza el usuario
         $senso_usuarios = Senso::findOrFail($id);
         $this -> id_persona = $id;
         $this -> dni = $senso_usuarios -> DNI;
@@ -73,17 +69,17 @@ class SensoUsuarios extends Component
         $this -> dir = $senso_usuarios -> DIRECCION;
         $this -> tfno = $senso_usuarios -> TELEFONO;
         $this -> fecnac = $senso_usuarios -> FECHA_NACIMIENTO;
-        $this -> bloqueo = true;
+        $this -> bloqueo = true; //bloqueamos el formulario para que no se pueda modificar
         $this->validate();
         $this->abrirModal();
     }
     
-    public function eliminar($id){
+    public function eliminar($id){ //este metodo se ejecuta cuando se hace click en el boton eliminar, que es cuando se abre el modal y se elimina el usuario
         Senso::find($id)->delete();
-        session()->flash('rojo', 'Usuario eliminado correctamentee');
+        session()->flash('rojo', 'Usuario eliminado correctamentee'); //mensaje de confirmacion
     }
 
-    public function editar($id){
+    public function editar($id){ //este metodo se ejecuta cuando se hace click en el boton editar, que es cuando se abre el modal y se edita el usuario
         $senso_usuarios = Senso::findOrFail($id);
         $this -> id_persona = $id;
         $this -> dni = $senso_usuarios -> DNI;
@@ -93,13 +89,13 @@ class SensoUsuarios extends Component
         $this -> dir = $senso_usuarios -> DIRECCION;
         $this -> tfno = $senso_usuarios -> TELEFONO;
         $this -> fecnac = $senso_usuarios -> FECHA_NACIMIENTO;
-        $this -> bloqueo = false;
+        $this -> bloqueo = false; //desbloqueamos el formulario para que se pueda modificar
         $this->validate();
         $this->abrirModal();
     }
-    public function guardar(){
+    public function guardar(){ //este metodo se ejecuta cuando se hace click en el boton guardar, que es cuando se guarda el usuario ya sea para modificar o crear
         
-        $this->validate();
+        $this->validate(); //validamos los campos del formulario
         
         Senso::updateOrCreate(['id' => $this ->id_persona],
         [ 
@@ -111,11 +107,11 @@ class SensoUsuarios extends Component
             'DIRECCION' => $this -> dir,
             'TELEFONO' => $this -> tfno,
             'FECHA_NACIMIENTO' => $this -> fecnac,
-        ]);
+        ]); //actualizamos o creamos el usuario
         session()->flash('verde', 
-        $this -> id_persona ? 'Usuario editado correctamente' : 'Usuario creado correctamente');
+        $this -> id_persona ? 'Usuario editado correctamente' : 'Usuario creado correctamente'); //mostramos un mensaje de confirmacion
         $this -> cerrarModal();
-        $this -> limpiar();
+        $this -> limpiar(); //limpiamos los campos del formulario
        
     }
 }

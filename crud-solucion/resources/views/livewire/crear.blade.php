@@ -20,8 +20,8 @@
                         
                         <div class="mb-4">
                             <label for="dni" class="lbl">Dni</label>
-                            <input type="text" @if($bloqueo) disabled  @endif class="in " id="dni" wire:model="dni">
-                            @error('dni') <span class="error text-red-500">{{ $message }}</span> @enderror
+                            <input type="text" @if($bloqueo) disabled  @endif class="in " id="dni" wire:model="dni"> {{-- Estos if que contienen todos los input son para desabilitar la caja de texto en caso de que se presione el boton de visualizar usuario.--}}
+                            @error('dni') <span class="error text-red-500">{{ $message }}</span> @enderror {{-- todos los @error pertenecen a las notifaciones que se crean al momento de verificarse los campso.--}}
                         </div>
                         <div class="mb-4">
                             <label for="nombre" class="lbl">Nombre</label>
@@ -61,7 +61,7 @@
                         
 
                         <div class="  px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                           @if (!$bloqueo )
+                           @if (!$bloqueo ) {{-- esta variable bloqueo se encarga de checar cuando fue presionado el boton crear, el de editar o el de visualizacion, y asi mismo limite las funcions--}}
                            <span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
                             <button wire:click.prevent="guardar()" type="button" class=" btn border-transparent  bg-purple-600  text-white   hover:bg-purple-800  focus:border-green-700 focus:shadow-outline-green ">Guardar</button>
                           </span>

@@ -12,17 +12,17 @@
 
 </x-slot>
 
-<div class="items-center justify-center min-h-screen ">
+<div class="items-center justify-center min-h-screen table-responsive ">
     <div class="max-w-max mx-auto sm:px6 lg:px-8 ">
         <div class=" text-gray-400 overflow-hidden    ">
-           @if ($tipo_usuario != null)
+           @if ($tipo_usuario != null){{-- verificacion del tipo de usuario para los permisos.--}}
            <button  wire:click="crear()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-4 mt-3 rounded-lg" > Crear </button>
            @else
            <div class="pt-9">
 
            </div>
            @endif
-             @if($modal)
+             @if($modal){{--en caso de que el modal este activo que es cuando queremos crear un usuario, mandara llamar la vista crear dentro de la carpeta livewire.--}}
                 @include('livewire.crear')
             @endif
             <table class="table mt-2 max-w-7xl  border-separate  text-sm ">
@@ -44,7 +44,7 @@
                 </thead>
                 <tbody class="bg-gray-800">
                     
-                    @foreach ($senso  as $senso_usuarios)
+                    @foreach ($senso  as $senso_usuarios)  {{-- for each para recorrer cada uno de los usuarios de la base de datos --}}
                    
                    
                         <tr> 
@@ -56,7 +56,7 @@
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->FECHA_NACIMIENTO }}</td>
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->DIRECCION }}</td>
                             <td class=" px-4 text-center py-2">{{ $senso_usuarios->TELEFONO }}</td>
-                         @if ($tipo_usuario != null)
+                         @if ($tipo_usuario != null){{-- verificacion del tipo de usuario para los permisos --}}
                             <td class="p-3">
                                 
                                 <a wire:click="ver({{$senso_usuarios->id }})" class="text-blue-500 hover:text-blue-200 mr-2 ">
@@ -83,10 +83,10 @@
                    
                 </tbody>
             </table>
-            <div class="pagination justify-content-end">
+            <div class="pagination justify-content-end">{{-- Esto es parte de la paginacion, que viene con laravel.--}}
                 {{$senso->links()}}
               </div>  
-            @if(session()->has('verde'))
+            @if(session()->has('verde')){{-- tanto este if como el de abajo son parte de las notifiaciones que se crean al moficar, crear o eliminar algn usuario del senso.--}}
             <div class="container" id="alertbox">
                 <div class="container bg-green-500 flex items-center text-white text-sm font-bold px-4 py-3 relative"
                     role="alert">
